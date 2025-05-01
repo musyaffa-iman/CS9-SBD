@@ -1,12 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import AppLayout from '../components/Layout/AppLayout';
-import Featured from '../components/Featured';
-import useApi from '../hooks/useApi';
 
 const HomePage = () => {
-    const { data: featuredStores, loading: storesLoading } = useApi('/stores?featured=true');
-    const { data: featuredItems, loading: itemsLoading } = useApi('/items?featured=true');
-    
     const heroRef = useRef(null);
 
     useEffect(() => {
@@ -46,7 +41,7 @@ const HomePage = () => {
                     </div>
                     <div 
                         ref={heroRef}
-                        className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 opacity-0 translate-y-4 transition-all duration-1000 ease-out"
+                        className="relative px-4 py-32 sm:px-6 sm:py-40 lg:py-48 lg:px-8 opacity-0 translate-y-4 transition-all duration-1000 ease-out"
                     >
                         <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
                             <span className="block text-white">Take control of your</span>
@@ -59,13 +54,13 @@ const HomePage = () => {
                             <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
                                 <a
                                     href="/stores"
-                                    className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50 sm:px-8"
+                                    className="flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50"
                                 >
                                     Browse Stores
                                 </a>
                                 <a
                                     href="/items"
-                                    className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-70 sm:px-8"
+                                    className="flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-md shadow-sm text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-70"
                                 >
                                     View Items
                                 </a>
@@ -73,21 +68,6 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Featured Sections */}
-                <Featured 
-                    title="Featured Stores"
-                    items={featuredStores}
-                    type="stores"
-                    loading={storesLoading}
-                />
-
-                <Featured 
-                    title="Featured Items"
-                    items={featuredItems}
-                    type="items"
-                    loading={itemsLoading}
-                />
             </div>
         </AppLayout>
     );
