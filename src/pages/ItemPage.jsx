@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AppLayout from '../components/Layout/AppLayout';
 import Button from '../components/common/Button';
-import LoadingSpinner from '../components/common/LoadingSpinner';
 import Modal from '../components/common/Modal';
 import useApi from '../hooks/useApi';
 import { formatCurrency } from '../utils/formatUtils';
@@ -39,16 +38,6 @@ const ItemPage = () => {
             setShowPurchaseModal(false);
         }
     };
-
-    if (loading) {
-        return (
-            <AppLayout>
-                <div className="flex justify-center items-center min-h-screen">
-                    <LoadingSpinner />
-                </div>
-            </AppLayout>
-        );
-    }
 
     if (error || !item) {
         return (

@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AppLayout from '../components/Layout/AppLayout';
 import Grid from '../components/Grid';
-import LoadingSpinner from '../components/common/LoadingSpinner';
 import useApi from '../hooks/useApi';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import { getAllStores, createStore, updateStore, deleteStore } from '../services/api';
@@ -201,7 +200,7 @@ const StoresPage = () => {
                 {/* Loading State */}
                 {loading && (
                     <div className="flex justify-center py-8">
-                        <LoadingSpinner />
+                        {/* LoadingSpinner removed */}
                     </div>
                 )}
                 {/* Store Modal */}

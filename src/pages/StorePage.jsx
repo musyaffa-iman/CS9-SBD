@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import AppLayout from '../components/Layout/AppLayout';
 import Grid from '../components/Grid';
-import LoadingSpinner from '../components/common/LoadingSpinner';
 import { getStoreById, getStoreItems, updateStore, deleteStore } from '../services/api';
 import Modal from '../components/common/Modal';
 import Button from '../components/common/Button';
@@ -12,7 +11,6 @@ import { formatCurrency } from '../utils/formatUtils';
 const StorePage = () => {
     const { id } = useParams();
     const { data: store, loading, error, execute } = useApi(() => getStoreById(id), [id]);
-    // Use array directly for store items, like transactions
     const { data: storeItems, loading: itemsLoading, execute: reloadItems } = useApi(() => getStoreItems(id), [id]);
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('edit');
@@ -55,16 +53,6 @@ const StorePage = () => {
             setActionLoading(false);
         }
     };
-
-    if (loading) {
-        return (
-            <AppLayout>
-                <div className="flex justify-center items-center min-h-screen">
-                    <LoadingSpinner />
-                </div>
-            </AppLayout>
-        );
-    }
 
     if (error || !store) {
         return (
@@ -162,11 +150,7 @@ const StorePage = () => {
                                 <h2 className="text-2xl font-bold text-gray-900">Items</h2>
                             </div>
 
-                            {itemsLoading ? (
-                                <div className="flex justify-center py-12">
-                                    <LoadingSpinner />
-                                </div>
-                            ) : (Array.isArray(storeItems) && storeItems.length > 0) ? (
+                            {Array.isArray(storeItems) && storeItems.length > 0 ? (
                                 <div className="mt-8">
                                     <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="gap-6">
                                         {storeItems.map((item) => (

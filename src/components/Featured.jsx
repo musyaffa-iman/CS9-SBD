@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import useWindowSize from '../hooks/useWindowSize';
-import { formatCurrency } from '../utils/formatUtils';
+import Card from './Card';
 
 const Featured = ({ 
     title = 'Featured',
     items = [],
-    type = 'items', // 'items' or 'stores'
-    loading = false,
+    type = 'items',
     error = null
 }) => {
     const { isMobile } = useWindowSize();
@@ -24,7 +23,7 @@ const Featured = ({
                     items.forEach((item, index) => {
                         setTimeout(() => {
                             item.classList.add('opacity-100', 'translate-y-0');
-                        }, index * 200); // Stagger animation by 200ms per item
+                        }, index * 200);
                     });
                 }
             },
@@ -32,35 +31,12 @@ const Featured = ({
         );
 
         const currentSectionRef = sectionRef.current;
-        if (currentSectionRef) {
-            observer.observe(currentSectionRef);
-        }
+        if (currentSectionRef) observer.observe(currentSectionRef);
 
         return () => {
-            if (currentSectionRef) {
-                observer.unobserve(currentSectionRef);
-            }
+            if (currentSectionRef) observer.unobserve(currentSectionRef);
         };
     }, []);
-
-    if (loading) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="animate-pulse">
-                    <div className="h-8 w-1/4 bg-gray-200 rounded mb-6"></div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[...Array(displayCount)].map((_, i) => (
-                            <div key={i} className="bg-white rounded-lg shadow-sm p-4">
-                                <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
-                                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
-    }
 
     if (error) {
         return (
@@ -90,41 +66,40 @@ const Featured = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {displayItems.map((item) => (
-                    <Link
+                    <div
                         key={item.id}
-                        to={`/${type}/${item.id}`}
-                        className="group feature-item opacity-0 translate-y-4 transition-all duration-700 ease-out"
+                        className="feature-item opacity-0 translate-y-4 transition-all duration-700 ease-out"
                     >
-                        <div className="bg-white rounded-lg shadow-sm overflow-hidden transition-shadow hover:shadow-md">
-                            <div className="aspect-w-16 aspect-h-9">
-                                <img
-                                    src={item.image_url || 'placeholder.jpg'}
-                                    alt={item.name}
-                                    className="w-full h-48 object-cover group-hover:opacity-90 transition-opacity"
-                                />
-                            </div>
-                            <div className="p-4">
-                                <h3 className="text-lg font-medium text-gray-900 group-hover:text-gray-600 transition-colors">
-                                    {item.name}
-                                </h3>
-                                {type === 'items' && (
-                                    <div className="mt-2 flex justify-between items-center">
-                                        <p className="text-gray-600">
-                                            {formatCurrency(item.price)}
+                        {type === 'items' ? (
+                            <Card item={item} type="item" />
+                        ) : (
+                            <Link to={`/${type}/${item.id}`}>
+                                <div className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow overflow-hidden">
+                                    <img
+                                        src={item.image_url || '/placeholder-store.jpg'}
+                                        alt={item.name}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <div className="p-4">
+                                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-gray-600 transition-colors">
+                                            {item.name}
+                                        </h3>
+                                        <p className="mt-2 text-sm text-gray-500">
+                                            {item.address}
                                         </p>
-                                        <span className="text-sm text-gray-500">
-                                            {item.stock} in stock
-                                        </span>
+                                        <div className="mt-4 flex items-center text-sm text-gray-500">
+                                            <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.95-.69l1.07-3.292z" />
+                                            </svg>
+                                            <span className="ml-1">{item.rating || 'No ratings'}</span>
+                                            <span className="mx-2">•</span>
+                                            <span>{item.total_items || 0} items</span>
+                                        </div>
                                     </div>
-                                )}
-                                {type === 'stores' && (
-                                    <p className="mt-2 text-sm text-gray-600">
-                                        {item.address}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    </Link>
+                                </div>
+                            </Link>
+                        )}
+                    </div>
                 ))}
             </div>
         </section>

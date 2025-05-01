@@ -37,15 +37,9 @@ const TransactionsPage = () => {
         try {
             const response = await payTransaction(transactionId);
             if (response.success) {
-                // Update the transaction in the list
-                setTransactions(transactions.map(t => 
-                    t.id === transactionId ? { ...t, status: 'paid' } : t
-                 ));
-                
-                // Refresh user data to get updated balance
-                const userData = await updateUser({ id: user.id });
-                if (!userData) {
-                    throw new Error('Failed to update user data');
+                await loadTransactions();
+                if (updateUser) {
+                    updateUser(response.payload.user);
                 }
             } else {
                 throw new Error(response.message);
@@ -57,11 +51,11 @@ const TransactionsPage = () => {
 
     const handleDeleteTransaction = async (transactionId) => {
         if (!window.confirm('Are you sure you want to delete this transaction?')) return;
-
+        
         try {
             const response = await deleteTransaction(transactionId);
             if (response.success) {
-                setTransactions(transactions.filter(t => t.id !== transactionId));
+                await loadTransactions();
             } else {
                 throw new Error(response.message);
             }
@@ -69,14 +63,6 @@ const TransactionsPage = () => {
             setError(error.message);
         }
     };
-
-    if (loading) return (
-        <AppLayout>
-            <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent"></div>
-            </div>
-        </AppLayout>
-    );
 
     return (
         <AppLayout>
